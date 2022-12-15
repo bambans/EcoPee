@@ -3,7 +3,7 @@ print('Main.py...')
 from network import WLAN, STA_IF
 from connection import socket_connector, response_sender, close_connection, wifi_connector, ap_connector, ap_deactivator
 from telegramBot import getUserData, sendToTelegram
-from machine import reset
+from machine import reset, Pin, ADC
 from time import sleep
 
 try:
@@ -50,19 +50,30 @@ if(e):
 
     print('ChatID received. Sending messages...')
     print('Test: turning on EcoPee message...')
-    if sendToTelegram(chatID, f"Olá {data['mom_name']}. Seu EcoPee já está ligado!"):
+    if sendToTelegram(chatID, f"Olá {data['mom_name']}, seu EcoPee já está ligado!"):
         print('Message sent!')
     else:
         print('Error sending message.')
     
     print('Test: warning EcoPee message...')
-    if sendToTelegram(chatID, f"Quando o(a) {data['baby_name']} urinar você será avisada!"):
+    if sendToTelegram(chatID, f"Quando o(a) {data['baby_name']} urinar você será avisado(a)!"):
         print('Message sent!')
     else:
         print('Error sending message.')
 
-    # Code to be executed when the EcoPee is turned on and reading the sensor
-    
+    print('Waiting true signal from sensor...')
+    pin = ADC(Pin(34))
+    pin.atten(ADC.ATTN_11DB)
+    while True:
+        test = pin.read()
+        print(f'Pin value read: {test}')
+        if test > 1000:
+            print('True signal received. Sending message...')
+            if sendToTelegram(chatID, f"Olá {data['mom_name']}. O(a) {data['baby_name']} urinou!"):
+                print('Message sent!')
+            else:
+                print('Error sending message.')
+        sleep(300)
 else:
     print('Config file not found...')
 
