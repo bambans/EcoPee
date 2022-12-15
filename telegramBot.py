@@ -11,8 +11,8 @@ except:
 # Show some more information
 debug = True
 
-# apiToken = '5795451239:AAHPfM2MEqIl0GqupAE2M2a2KF3nC0cqO9s' # EcoPee
-apiToken = '5574509512:AAFqo-1ncnkbgRynTkrG1j5Kiu2wg2LKlKw' # Teste
+apiToken = '5795451239:AAHPfM2MEqIl0GqupAE2M2a2KF3nC0cqO9s' # EcoPee
+# apiToken = '5574509512:AAFqo-1ncnkbgRynTkrG1j5Kiu2wg2LKlKw' # Teste
 
 botAPI_endpoint = f'https://api.telegram.org/bot{apiToken}'
 
