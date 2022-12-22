@@ -143,17 +143,17 @@ Fonte: Autoria própria -->
 
 Já com o protótipo da fralda pet, conseguimos observar a necessidade de alterar a cava da perna, de forma que ficasse mais confortável para o usuário, além de perceber que a modelagem deveria ser alterada para que a fralda tivesse um cós mais alto para melhor acomodar os componentes eletrônicos.
 
-### Componentes eletrônicos
+> ## Computação Física e Aplicações
 
-Para a parte elétrica e computacional do projeto, foi utilizado um microcontrolador que receberá informações do sensor de umidade e emitirá um alerta via Telegram para o usuário quando a fralda estiver úmida. Não houve nenhuma implementação específica para a integração com o Telegram, visto que o aplicativo de mensagens possui API para facilitar a comunicação. 
+> ### Descrição
+
+A parte elétrica e computacional do projeto foi feita utilizando um microcontrolador que recebe informações de um sensor de umidade e emite u alerta via Telegram para o usuário quando a fralda estiver úmida. Não houve nenhuma implementação específica para a integração com o Telegram, visto que o aplicativo de mensagens possui API para facilitar a comunicação. 
 
 Dos componentes utilizados, tem-se:
 
 - ESP32: microcontrolador ao qual o sensor de umidade direta é conectado. Nele roda o programa em quase todas as suas funcionalidades, exceto a API, a qual faz parte do próprio Telegram;
 - Sensor de umidade: sensor fabricado pelo grupo, que tem por função dar um sinal verdadeiro quando conectado ao ESP32 e quando estiver molhado, de forma simultânea;
 - Adaptador de pilhas: componente ao qual se conectam pilhas, para alimentação elétrica do circuito.
-
-#### Programação
 
 O programa para o projeto foi desenvolvido em Python 3, sob a plataforma MicroPython para ESP32.
 
@@ -178,6 +178,24 @@ De forma lógico-sequencial, a execução se dá por:
 - - - “GET /reset HTTP/1.1”: desliga a rede wifi própria e reinicia o produto, o qual, sempre quando ligar, realizará todos os testes na ordem e fluxo especificados.
 
 Quanto à escolha do Telegram, deve-se ao fato de que o mensageiro é open source e sua API é aberta, de fácil uso e acesso. Não só, o aplicativo possui uma grande base de usuários, o que não é um fator limitante quanto à execução do projeto.
+
+> ### Lista de materiais
+> Quantidade | Nome | Referência
+> ---- | ---- | ----
+> 1 | ESP32 | [Espressif - ESP32](https://www.espressif.com/en/products/socs/esp32)
+> 1 | Suporte para pilhas USB | [Imagem do suporte](https://drive.google.com/file/d/17pR94_S-K_3fohaxDNsq9pAetnVxjmXu/view?usp=sharing)
+> 1 | Sensor de umidade direta/urina | [Imagem do sensor: feito à mão](https://drive.google.com/file/d/18gWiOcuHPGUFPEBeWU-moolkF33-8-92/view?usp=sharing)
+> 2 | Botão de pressão metálicos | [Imagem dos biotões](https://drive.google.com/file/d/17B5EzAg6SMNSU35E2-hMkUhNJSNeOvjI/view?usp=sharing)
+> 2 | Fio de cobre | [Imagem de exemplo; Fios de cobre](https://www.solucoesindustriais.com.br/images/produtos/imagens_10127/p_fio-de-cobre-encapado-10.jpg)
+> 1 | Cabo USB A para micro B | [Imagem de exemplo; Cabo USB](https://d3ugyf2ht6aenh.cloudfront.net/stores/001/930/347/products/cabo_usb_microb_m_2-7249b69acfc54fe23516389599662276-1024-1024.jpg)
+> 2 | Pilha AA | [Imagem de exemplo; Pilhas AA](https://www.baudaeletronica.com.br/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/p/i/pilha-aa.jpg)
+> 
+> ### Conexões
+> ### Montagem do dispositivo
+> ### Arquitetura e Organização
+> ### Usabilidade
+> ### Construção do programa
+> ### Referências
 
 # RESULTADOS
 
