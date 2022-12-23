@@ -206,18 +206,84 @@ De forma lógico-sequencial, a execução se dá por (a priori, seguindo o que e
 	- Cria uma rede Wifi chamada EcoPee - Wifi Access Point;
 	- Cria um socket de comunicação (servidor) e aguarda conexões (Endereço: [http://192.168.4.1:80/](http://192.168.4.1:80/));
 	- Quando conectado, recebe e decodifica as requisições e, dados os casos, tomas as seguintes ações:
-		- “GET / HTTP/1.1”: abre, lê, envia e fecha o arquivo “index.html”, o qual contém uma página com um formulário a ser preenchido pelo cliente;
-		- “GET /wifi_scan HTTP/1.1”: cria um objeto que trata sobre as redes Wi-Fi, o qual escaneia as redes próximas e guarda em uma variável. Essa variável é empacotada no formato JSON e enviada ao cliente, o qual cria uma lista de redes próximas;
-		- “POST /config HTTP/1.1”: recebe os dados de configuração do formulário do cliente e os escreve no arquivo de configuração “config.json”;
-		- “GET /exit.html HTTP/1.1”: abre, lê, envia e fecha o arquivo “exit.html”, o qual contém uma página com o resultado do teste do arquivo de configuração;
-		- “GET /test_config HTTP/1.1”: testa se o arquivo “config.json” existe e envia verdadeiro (existe) ou falso (não existe) ao cliente;
-		- “GET /reset HTTP/1.1”: desliga a rede wifi própria e reinicia o produto, o qual, sempre quando ligar, realizará todos os testes na ordem e fluxo especificados.
+		- `GET / HTTP/1.1` ou `GET /index.html HTTP/1.1`: abre, lê, envia e fecha o arquivo “index.html”, o qual contém uma página com um formulário a ser preenchido pelo cliente;
+		- `GET /wifi_scan HTTP/1.1`: cria um objeto que trata sobre as redes Wi-Fi, o qual escaneia as redes próximas e guarda em uma variável. Essa variável é empacotada no formato JSON e enviada ao cliente, o qual cria uma lista de redes próximas;
+		- `POST /config HTTP/1.1`: recebe os dados de configuração do formulário do cliente e os escreve no arquivo de configuração “config.json”;
+		- `GET /exit.html HTTP/1.1`: abre, lê, envia e fecha o arquivo “exit.html”, o qual contém uma página com o resultado do teste do arquivo de configuração;
+		- `GET /test_config HTTP/1.1`: testa se o arquivo `config.json` existe e envia verdadeiro (existe) ou falso (não existe) ao cliente;
+		- `GET /reset HTTP/1.1`: desliga a rede wifi própria e reinicia o produto, o qual, sempre quando ligar, realizará todos os testes na ordem e fluxo especificados.
 
 Quanto à escolha do Telegram, deve-se ao fato de que o mensageiro é open source e sua API é aberta, de fácil uso e acesso. Não só, o aplicativo possui uma grande base de usuários, o que não é um fator limitante quanto à execução do projeto.
 
+Sobre o arquivo `config.json`, os dados nele salvos são salvos sobre o MIME type `application/json`, com os seguintes dados para condiguração:
+
+- "mom_name": nome do tutor;
+- "baby_name": nome do tutelado;
+- "mom_telegram_id": username do tutor no Telegram (sem o "@");
+- "wifi_name": SSID da rede Wifi a qual o ESP32 irá se conectar posteriormente;
+- "wifi_pass": senha da rede Wifi a qual o ESP32 irá se conectar posteriormente.
+
 ### Usabilidade
+
+Para montar o dispositivo (Parte físico-computacional):
+
+1. Inicialmente, devem ser colocadas as duas pilhas AA no suporte para pilhas USB;
+2. Deve ser conectado o cabo USB ao ESP32, para que este seja devidamente alimentado com corrente elétrica;
+3. No Telegram, pesquise por `EcoPee` (Bot), e inicialize a comunicação com ele. (Preferencialmente, após o "Start", envie qualquer outra mensagem, apenas pela garantia que a comunicação foi devidamente estabelecida);
+4. Conecte-se a rede wifi `EcoPee`, com senha `novousuario`;
+5. Entre em algum navegador de internet e acesse o endereço [http://192.168.4.1/](http://192.168.4.1/);
+6. Preencha o formulário que será aberto;
+7. Aguarde alguns intantes. Uma nova página será aberta (`exit.html`);
+8. Seu dispostivo estará devidamente configurado. 
+
+Para as partes modeladas, vide [EXPERIÊNCIA DO USUÁRIO](#experiência-do-usuário).
+
 ### Construção do programa
-### Referências
+
+O programa foi construído sobre alguns grandes aspectos, como a arquitetura cliente-servidor (sockets), redes (wifi station e wifi access point) e consumo de APIs (Telegram Bot API).
+
+O sistema em si, essencialmente, não depende de algum comando direto o usuário para que funcione, uma vez que, após sua configuração, é necessário que o sensor de umidade seja molhado para que as mensagens sejam enviadas ao cliente. Portanto, não há maneira ou motivo para que o cliente envie comandos ao sistema.
+
+Sua concepção foi feita de tal forma que, inicialmente, foi criada a biblioteca `telegramBot.py`, com as rotinas de configuração e comunicação com a API provida pelo Telegram. Após, foi pensada a estrutura do backend da aplicação, em foco na construção do formulário de configuração - a partir disso, foi criada a biblioteca `connection.py`, usada para tal.
+
+Em cima disso, foi criado o formulário em si, com os campos previamente mencionados.
+
+#### Empasses de desenvolvimento
+
+Durante o desenvolvimento, foram passadas algumas dificuldades de desenvolvimentos, sendo elas, em geral, relacionadas a utilização do MicroPython. Tem-se:
+
+- Tratamento de requisições: as requisições transitam em formato texto e, portanto, não é fácil que seja convertida em um objeto, em que se é possível acessar suas propriedades com facilidade. É necessário que os campos sejam acessados através do método `find()`, ou seja, busca em um texto (String) se existe alguma substring, como, por exemplo, os cabeçalhos das resquisições (método utilizado).
+
+#### Testes da aplicação
+
+Durante o desenvolvimento, foram realizados testes, como:
+
+1. Teste de funcionamento do sensor: se quando molhado, o líquido presente entre as trilhas conduziria eletricidade; [OK]
+2. Enviar imagens através do socket (estilização do frontend): durante o carregamento das páginas no frontend, carregar imagens na página; [X]*
+3. Enviar mensagens para o cliente através do Telegram, por meio do ESP32: quando o sensor trás um sinal verdadeiro, enviar as mensagens corretas ao usuário do sistema pelo Telegram; [OK]
+4. Teste do produto em pleno funcionamento: teste completo do produto. [X]**
+
+* O carregamento de imagens não foi parte essencial para o desenvolvimento do projeto. Ainda mais, onde houve a possibilidade, foi usado o formato SVG, o qual pode ser incluído diretamente no código da aplicação;
+
+** De forma modularizada e, de alguma forma integrada, todas as partes do projeto funcionam, incluindo o acionamento dos pinos corretos para o envio das mensagens aos clientes no Telegram. Entretanto, não foi realizado um teste concreto, envolvendo diretamente o sensor.
+
+### Ideias de próximos passos de desenvolvimento
+
+Para que o produto traga uma melhor qualidade partindo dos aspectos abordados sob o ponto de vista físico-computacional, existem alguns pontos que são de bom grado serem melhorados, sendo eles:
+
+- Método de restaurar padrão de fábrica: um botão o qual, quando acionado, apaga o arquivo `config.json` e, portanto, apaga todas as configurações do dispositivo, restaurando-o para o padrão de fábrica;
+- Backup das configurações: existir algum meio de que o arquivo de configuração seja salvo localmente pelo usuário do produto;
+- Edição das configurações: evitando que o cliente tenha que fazer alguma reconfiguração completa, é interessante que existe um meio de o cliente apenas editar as configurações feitas;
+- Personalização das mensagens: é interesante, também, que o cliente possa configurar as mensagens as quais deseja enviar dados os possíveis casos de uso;
+- 
+
+### Referências (CFA)
+
+- [MicroPython](https://micropython.org/);
+- [MicroPython for ESP32](https://docs.micropython.org/en/latest/esp32/tutorial/index.html);
+- [MicroPython sockets](https://docs.micropython.org/en/latest/library/socket.html);
+- [Telegram APIs](https://core.telegram.org/);
+- [Telegram Bot API](https://core.telegram.org/bots/api);
 
 # RESULTADOS
 
@@ -233,7 +299,7 @@ A fralda infantil respondeu perfeitamente aos testes, mostrou-se adaptável ao m
 (inserir imagem)
 Fonte: -->
 
-A fralda pet, assim como a infantil, mostrou-se confortável e bem adaptável aos movimentos do usuário, apenas as cavas se mostraram maiores do que o necessário, mesmo com a aplicação de elásticos.  Devendo ser repensadas em uma próxima modelagem, assim como o bolso frontal. O ideal seria que o elástico ficasse mais tensionado, para um melhor ajuste. Com a fralda em uso, percebemos que manter o componente na parte frontal, acaba incomodando o usuário, já que é comum animais deitarem de barriga para baixo. Por isso, torna-se necessário repensar a modelagem para que o componente fique nas costas do animal, evitando desconforto e um possível acesso. Assim como na fralda infantil, há a necessidade de repensar a fonte de energia devido ao calor gerado.
+A fralda pet, assim como a infantil, mostrou-se confortável e bem adaptável aos movimentos do usuário, apenas as cavas se mostraram maiores do que o necessário, mesmo com a aplicação de elásticos.  Devendo ser repensadas em uma próxima modelagem, assim como o bolso frontal. O ideal seria que o elástico ficasse mais tensionado, para um melhor ajuste. Com a fralda em uso, percebemos que manter o componente na parte frontal, acaba incomodando o usuário, já que é comum animais deitarem de barriga para baixo. Por isso, torna-se necessário repensar a modelagem para que o componente fique nas costas do animal, evitando desconforto e um possível acesso. Assim como na fralda infantil, há a necessidade de repensar sobre algum isolamente térmico, devido ao calor gerado.
 
 ## EXPERIÊNCIA DO USUÁRIO	
 
@@ -308,3 +374,5 @@ O projeto em si, trouxe vários desafios que foram aos poucos resolvidos, como a
 - ROCHA, Natividade; SELORES, Manuela. Dermatite das fraldas. Revista Nascer e Crescer, n. 13 (3), p. 206-214, 2004.
 
 - ROKUGAWA, Marceli Yuli Cunha. Processo de desenvolvimento de uma fralda de alta absorção para incontinência urinária. 2019. Trabalho de Conclusão de Curso. Universidade Tecnológica Federal do Paraná.
+
+> `O capítulo Computação Física e Aplicações foi inteiramente desenvolvimento por mim, Otávio Rodrigues Bambans`.
