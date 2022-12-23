@@ -26,14 +26,13 @@
 
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="500" preserveAspectRatio="xMidYMid meet" version="1.0" viewBox="0.0 -2.5 99.4 104.6" zoomAndPan="magnify">
     <g data-name="Layer 2">
-        <g data-name="Layer 1" fill="#288b18" id="change1_1">
-            <path d="M32.36,78.1c0-15.82,8.66-37.59,28.69-45-23.49,7.41-31.4,29.91-31.4,45C29.65,78.1,30.56,79.12,32.36,78.1Z"/>
-            <path d="M31.47,61C21.94,47.17,36.85,18,81.55,28.4,65.69,32.1,61.46,63,36.34,62.4A45.1,45.1,0,0,1,65.69,32.1C45.35,33.34,32.71,53.16,31.47,61Z"/>
-            <path d="M66.26,96.58A49.34,49.34,0,0,1,0,50.25,50.46,50.46,0,0,1,33.14,3,49.35,49.35,0,0,1,99.41,49.32,50.47,50.47,0,0,1,66.26,96.58Zm-33.12-91A46.72,46.72,0,0,0,2.54,49.32a47.63,47.63,0,0,0,47.6,47.54A46.57,46.57,0,0,0,96.87,50.24,47.62,47.62,0,0,0,49.27,2.7,46.9,46.9,0,0,0,33.14,5.53Z"/>
-        </g>
+	<g data-name="Layer 1" fill="#288b18" id="change1_1">
+	    <path d="M32.36,78.1c0-15.82,8.66-37.59,28.69-45-23.49,7.41-31.4,29.91-31.4,45C29.65,78.1,30.56,79.12,32.36,78.1Z"/>
+	    <path d="M31.47,61C21.94,47.17,36.85,18,81.55,28.4,65.69,32.1,61.46,63,36.34,62.4A45.1,45.1,0,0,1,65.69,32.1C45.35,33.34,32.71,53.16,31.47,61Z"/>
+	    <path d="M66.26,96.58A49.34,49.34,0,0,1,0,50.25,50.46,50.46,0,0,1,33.14,3,49.35,49.35,0,0,1,99.41,49.32,50.47,50.47,0,0,1,66.26,96.58Zm-33.12-91A46.72,46.72,0,0,0,2.54,49.32a47.63,47.63,0,0,0,47.6,47.54A46.57,46.57,0,0,0,96.87,50.24,47.62,47.62,0,0,0,49.27,2.7,46.9,46.9,0,0,0,33.14,5.53Z"/>
+	</g>
     </g>
 </svg>
-
 
 # RESUMO
 
@@ -105,18 +104,18 @@ As fraldas foram confeccionadas em tecido impermeável PUL na parte externa e Dr
 O absorvente sensor removível, foi criado com quatro camadas de Melton, tecido responsável por absorver líquidos. Na segunda camada, foram costuradas duas tiras de tecido condutivo em formato de “E” para formar um circuito sensor de umidade. O sensor construído, ao entrar em contato com a urina, que também é condutiva, fecha o circuito emitindo sinal para os componentes eletrônicos. Esse sinal é enviado para o microcontrolador ESP32 através de 2 botões de pressão em metal, fixados na extremidade de cada tira de tecido condutivo, que fazem a função de positivo e negativo. 
 Para testar a funcionalidade do sensor, foram pesquisadas fórmulas de como simular a urina humana, entre elas, a mais completa encontrada, foi criada por Louzada (2019), e necessita dos seguintes reagentes:
 
-> ### Tabela de reagentes
-> Reagente | Massa (g)
-> --- | ---
-> Fosfato de amônio | 1,7
-> Creatina | 0,7
-> Glicose | 0,35
-> Glicina | 0,7
-> Ácido oxálico | 0,7
-> Alanina | 0,7
-> Uréia | 14
-> Cloreto de sódio | 0,25
-> Albumina | 0,35
+### Tabela de reagentes
+Reagente | Massa (g)
+--- | ---
+Fosfato de amônio | 1,7
+Creatina | 0,7
+Glicose | 0,35
+Glicina | 0,7
+Ácido oxálico | 0,7
+Alanina | 0,7
+Uréia | 14
+Cloreto de sódio | 0,25
+Albumina | 0,35
 
 Fonte: Louzada
 
@@ -157,28 +156,6 @@ Dos componentes utilizados, de forma geral, tem-se:
 
 O programa para o projeto foi desenvolvido em Python 3, sob a plataforma MicroPython para ESP32.
 
-De forma lógico-sequencial, a execução se dá por:
-
-- Testa se existe o arquivo “config.json” para configurar o sistema;
-- Se existe:
-	- Lê os dados do arquivo;
-	- Conecta à rede Wi-Fi especificada no arquivo com o nome da rede (SSID) e senha;
-	- Conecta à API do Telegram, a qual retorna um conjunto de dados do EcoPee, filtra pelo usuário especificado no arquivo (o especificado na configuração - explicação mais abaixo), coleta o identificador de chat do usuário e guarda em uma variável;
-	- A partir do identificador, envia duas mensagens ao cliente, a primeira informando que o circuito está ligado e a segunda de que será avisado quando o sensor estiver molhado;
-	- Fica aguardando sinal verdadeiro no pino 34 (o qual está conectado o sensor) e, quando verdadeiro, avisa ao usuário	sobre a fralda estar molhada;
-- Se não existe:
-	- Cria uma rede Wifi chamada EcoPee;
-	- Cria um socket de comunicação (servidor) e aguarda conexões;
-	- Quando conectado, recebe e decodifica as requisições e, dados os casos, tomas as seguintes ações:
-		- “GET / HTTP/1.1”: abre, lê, envia e fecha o arquivo “index.html”, o qual contém uma página com um formulário a ser preenchido pelo cliente;
-		- “GET /wifi_scan HTTP/1.1”: cria um objeto que trata sobre as redes Wi-Fi, o qual escaneia as redes próximas e guarda em uma variável. Essa variável é empacotada no formato JSON e enviada ao cliente, o qual cria uma lista de redes próximas;
-		- “POST /config HTTP/1.1”: recebe os dados de configuração do formulário do cliente e os escreve no arquivo de configuração “config.json”;
-		- “GET /exit.html HTTP/1.1”: abre, lê, envia e fecha o arquivo “exit.html”, o qual contém uma página com o resultado do teste do arquivo de configuração;
-		- “GET /test_config HTTP/1.1”: testa se o arquivo “config.json” existe e envia verdadeiro (existe) ou falso (não existe) ao cliente;
-		- “GET /reset HTTP/1.1”: desliga a rede wifi própria e reinicia o produto, o qual, sempre quando ligar, realizará todos os testes na ordem e fluxo especificados.
-
-Quanto à escolha do Telegram, deve-se ao fato de que o mensageiro é open source e sua API é aberta, de fácil uso e acesso. Não só, o aplicativo possui uma grande base de usuários, o que não é um fator limitante quanto à execução do projeto.
-
 ### Lista de materiais
 Quantidade | Nome | Referência
 ---- | ---- | ----
@@ -196,13 +173,48 @@ O sensor de umidade possui dois fios, a se ententer como um polo positivo e um, 
 
 Destes, um fio é conectado a um dos GNDs do ESP32 e o outro, ao pino 34 - o pino 34 recebe uma atenuação de sinal de 11DB o que, nas configurações estabelecidas, significa que pretende-se ler os valores do pino em toda a sua extensão.
 
-Assim, é feita uma leitura contínua do pino 34 e sempre que haver um valor acima de 1000 (dentro do intervalo `[0, 4095]` - 12bit)
+Assim, é feita uma leitura contínua do pino 34 e sempre que haver um valor acima de 1000 (dentro do intervalo `[0, 4095]` - 12 bits)
 
 ### Montagem do dispositivo
 
-O ESP32, sem os pinos
+O ESP32, sem os pinos, foi colado na parte de trás do suporte de pilhas. Do lado oposto, foram colados dois botões de pressão metálicos, para que seja conectado o sensor de umidade direta (o sensor possui as contrapartes dos botões de pressão metálicos, os quais estão, cada um, conectados as suas respectivas trilhas). Um cabo USB (descrito na lista de materiais) é utilizado para conectar o ESP32 ao suporte de pilhas.
+
+<!-- inserir imagem -->
 
 ### Arquitetura e Organização
+
+O sistema foi construído valendo-se dos seguintes arquivos:
+
+- `boot.py`: é o primeiro arquivo a ser lido pelo MicroPython. Possui algumas diretivas de configuração inicial do Micropython;
+- `main.py`: é o principal arquivo do sistema, com as rotinas a serem seguidas; (Mais explicações adiante...) 
+- `connection.py`: pequena biblioteca com as rotinas de criação dos conectores e desconctores do Wifi Station e Wifi Access Point, além do conector, enviador e destruidor de Socket Connections;
+- `telegramBot.py`: pequena biblioteca com rotinas de configuração e tratamento de dados enviados do Telegram Bot API. Uma função pega as mensagens do Telegram Bot configurado, filtra pelo usuário passado e retorna o ChatID correspondente ao usuário. Outra, envia uma mensagem ao usuário a partir do ChatID correspondente;
+- `index.html`: página (HTML, CSS e JavaScript) que contém um formulário de configuração do sistema, o qual pega alguns dados do usuário;
+- `exit.html`: página (HTML, CSS e JavaScript) que exibe ao usuário se houve uma correta e com sucesso configuração;
+- `config.json`: arquivo de configuração com os dados do formulário. (Especificação mais adiante...)
+
+De forma lógico-sequencial, a execução se dá por (a priori, seguindo o que está estabelecido em `main.py`):
+
+- Testa se existe o arquivo `config.json` para configurar o sistema;
+- Se existe:
+	- Lê os dados do arquivo e salva os valores em algumas posições de um array;
+	- Conecta à rede Wi-Fi especificada no arquivo com o nome da rede (SSID) e senha - Wifi Station;
+	- Conecta à API do Telegram, a qual retorna um conjunto de dados do EcoPee (mensagens e seus metadados), filtra pelo usuário especificado no arquivo (o especificado na configuração - explicação mais abaixo), coleta o identificador de chat do usuário e guarda em uma variável;
+	- A partir do identificador, envia duas mensagens ao cliente, a primeira informando que o circuito está ligado e a segunda de que será avisado quando o sensor estiver molhado;
+	- Fica aguardando sinal verdadeiro no pino 34 (o qual está conectado o sensor) e, quando verdadeiro, avisa ao usuário sobre a fralda estar molhada;
+- Se não existe:
+	- Cria uma rede Wifi chamada EcoPee - Wifi Access Point;
+	- Cria um socket de comunicação (servidor) e aguarda conexões (Endereço: [http://192.168.4.1:80/](http://192.168.4.1:80/));
+	- Quando conectado, recebe e decodifica as requisições e, dados os casos, tomas as seguintes ações:
+		- “GET / HTTP/1.1”: abre, lê, envia e fecha o arquivo “index.html”, o qual contém uma página com um formulário a ser preenchido pelo cliente;
+		- “GET /wifi_scan HTTP/1.1”: cria um objeto que trata sobre as redes Wi-Fi, o qual escaneia as redes próximas e guarda em uma variável. Essa variável é empacotada no formato JSON e enviada ao cliente, o qual cria uma lista de redes próximas;
+		- “POST /config HTTP/1.1”: recebe os dados de configuração do formulário do cliente e os escreve no arquivo de configuração “config.json”;
+		- “GET /exit.html HTTP/1.1”: abre, lê, envia e fecha o arquivo “exit.html”, o qual contém uma página com o resultado do teste do arquivo de configuração;
+		- “GET /test_config HTTP/1.1”: testa se o arquivo “config.json” existe e envia verdadeiro (existe) ou falso (não existe) ao cliente;
+		- “GET /reset HTTP/1.1”: desliga a rede wifi própria e reinicia o produto, o qual, sempre quando ligar, realizará todos os testes na ordem e fluxo especificados.
+
+Quanto à escolha do Telegram, deve-se ao fato de que o mensageiro é open source e sua API é aberta, de fácil uso e acesso. Não só, o aplicativo possui uma grande base de usuários, o que não é um fator limitante quanto à execução do projeto.
+
 ### Usabilidade
 ### Construção do programa
 ### Referências
