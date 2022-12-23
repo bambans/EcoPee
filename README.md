@@ -24,7 +24,7 @@
 
 <!-- ![EcoPee Logo](ecoPee.svg) -->
 
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="500" preserveAspectRatio="xMidYMid meet" version="1.0" viewBox="0.0 -2.5 99.4 104.6" zoomAndPan="magnify">
+<!-- <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="500" preserveAspectRatio="xMidYMid meet" version="1.0" viewBox="0.0 -2.5 99.4 104.6" zoomAndPan="magnify">
     <g data-name="Layer 2">
 	<g data-name="Layer 1" fill="#288b18" id="change1_1">
 	    <path d="M32.36,78.1c0-15.82,8.66-37.59,28.69-45-23.49,7.41-31.4,29.91-31.4,45C29.65,78.1,30.56,79.12,32.36,78.1Z"/>
@@ -32,7 +32,7 @@
 	    <path d="M66.26,96.58A49.34,49.34,0,0,1,0,50.25,50.46,50.46,0,0,1,33.14,3,49.35,49.35,0,0,1,99.41,49.32,50.47,50.47,0,0,1,66.26,96.58Zm-33.12-91A46.72,46.72,0,0,0,2.54,49.32a47.63,47.63,0,0,0,47.6,47.54A46.57,46.57,0,0,0,96.87,50.24,47.62,47.62,0,0,0,49.27,2.7,46.9,46.9,0,0,0,33.14,5.53Z"/>
 	</g>
     </g>
-</svg>
+</svg> -->
 
 # RESUMO
 
@@ -162,7 +162,7 @@ Quantidade | Nome | Referência
 1 | ESP32 | [Espressif - ESP32](https://www.espressif.com/en/products/socs/esp32)
 1 | Suporte para pilhas USB | [Imagem do suporte](https://drive.google.com/file/d/17pR94_S-K_3fohaxDNsq9pAetnVxjmXu/view?usp=sharing)
 1 | Sensor de umidade direta/urina | [Imagem do sensor: feito à mão](https://drive.google.com/file/d/18gWiOcuHPGUFPEBeWU-moolkF33-8-92/view?usp=sharing)
-2 | Botão de pressão metálicos | [Imagem dos biotões](https://drive.google.com/file/d/17B5EzAg6SMNSU35E2-hMkUhNJSNeOvjI/view?usp=sharing)
+2 | Botão de pressão metálicos | [Imagem dos botões](https://drive.google.com/file/d/17B5EzAg6SMNSU35E2-hMkUhNJSNeOvjI/view?usp=sharing)
 2 | Fio de cobre | [Imagem de exemplo; Fios de cobre](https://www.solucoesindustriais.com.br/images/produtos/imagens_10127/p_fio-de-cobre-encapado-10.jpg)
 1 | Cabo USB A para micro B | [Imagem de exemplo; Cabo USB](https://d3ugyf2ht6aenh.cloudfront.net/stores/001/930/347/products/cabo_usb_microb_m_2-7249b69acfc54fe23516389599662276-1024-1024.jpg)
 2 | Pilha AA | [Imagem de exemplo; Pilhas AA](https://www.baudaeletronica.com.br/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/p/i/pilha-aa.jpg)
@@ -236,7 +236,7 @@ Para montar o dispositivo (Parte físico-computacional):
 7. Aguarde alguns intantes. Uma nova página será aberta (`exit.html`);
 8. Seu dispostivo estará devidamente configurado. 
 
-Para as partes modeladas, vide [EXPERIÊNCIA DO USUÁRIO](#experiência-do-usuário).
+Para as partes modeladas, vide [Materiais e métodos](#materiais-e-métodos).
 
 ### Construção do programa
 
